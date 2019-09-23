@@ -62,6 +62,7 @@ for chunk in read_log_chunk(args.logfile):
     df.append(dict(
         date=date,
         AvgTimeToEmpty=parse_int(extract_param(data, 'AvgTimeToEmpty')),
+        CurrentCapacity=parse_int(extract_param(data, 'CurrentCapacity')),
         Temperature=parse_int(extract_param(data, 'Temperature'))
     ))
 df = pd.DataFrame(df)
