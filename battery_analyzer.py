@@ -59,11 +59,18 @@ df = []
 for chunk in read_log_chunk(args.logfile):
     date = datetime.datetime.strptime(chunk[0], '%Y-%m-%d %H:%M:%S')
     data = chunk[1:]
+    AvgTimeToEmpty = parse_int(extract_param(data, 'AvgTimeToEmpty')),
+    MaxCapacity = parse_int(extract_param(data, 'MaxCapacity'))
+    CurrentCapacity = parse_int(extract_param(data, 'CurrentCapacity'))
+    CurrentCapacityPercent = CurrentCapacity * 100.0 / MaxCapacity
+    Temperature = parse_int(extract_param(data, 'Temperature'))
     df.append(dict(
         date=date,
-        AvgTimeToEmpty=parse_int(extract_param(data, 'AvgTimeToEmpty')),
-        CurrentCapacity=parse_int(extract_param(data, 'CurrentCapacity')),
-        Temperature=parse_int(extract_param(data, 'Temperature'))
+        AvgTimeToEmpty=AvgTimeToEmpty,
+        MaxCapacity=MaxCapacity,
+        CurrentCapacity=CurrentCapacity,
+        CurrentCapacityPercent=CurrentCapacityPercent,
+        Temperature=Temperature
     ))
 df = pd.DataFrame(df)
 
