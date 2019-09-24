@@ -11,14 +11,36 @@ from bokeh.models import ColumnDataSource
 from bokeh.plotting import figure, show
 
 
-DEFAULT_LOG_FILE_PATH = os.path.join(os.environ.get('HOME', ''), '.battery.log')
+def load_settings(path):
+    settings = {}
+    if os.path.isfile(SETTINGS_PATH):
+        with open(SETTINGS_PATH) as f:
+            for line in f:
+                key, value = line.split('=')
+                settings[key] = value.strip(' \n\r"\'')
+    return settings
+
+
+SETTINGS_PATH = os.path.join(os.environ.get('HOME', ''), '.battery_logger')
+SETTINGS = load_settings(SETTINGS_PATH)
+
+
+def find_default_logfile_path():
+	if 'LOG_PATH' in SETTINGS:
+		return SETTINGS['LOG_PATH']
+	default_path = os.path.join(os.environ.get('HOME', ''), '.battery.log2')
+	if os.path.isfile(default_path):
+		return default_path
+	return None
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('logfile', nargs='?', type=argparse.FileType('r'), default=DEFAULT_LOG_FILE_PATH)
+parser.add_argument('logfile', nargs='?', type=argparse.FileType('r'), default=find_default_logfile_path())
 parser.add_argument('param', type=str)
 args = parser.parse_args()
 
+if args.logfile is None:
+    raise Exception("No log file provided")
 
 def read_log_chunk(f):
     acc = []
