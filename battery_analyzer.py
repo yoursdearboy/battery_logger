@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Script to analyze battery
 # requires pandas and bokeh
 #   pip install pandas bokeh
